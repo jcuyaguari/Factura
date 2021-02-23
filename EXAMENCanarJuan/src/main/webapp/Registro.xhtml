@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+</h:head>
+<h:body>
+	<h1>Registro</h1>
+	<h:panelGroup id="buscarform">
+		<h:form> 
+		<fieldset>
+				NumFactura:
+				<h:inputText id="txtnombre"	value="#{facturaControllerBEAN.newfactura.numero}" />
+				<br /> Fecha:
+				<h:inputText id="txtFecha" value="#{facturaControllerBEAN.newfactura.fecha}" />
+				<br /> Cedula:
+				<h:inputText id="txtcedula" value="#{facturaControllerBEAN.newfactura.cedula}" />
+				<br /> Cliente:
+				<h:inputText id="txtcliente" value="#{facturaControllerBEAN.newfactura.nombreCliente}" />
+				<br />
+			</fieldset>
+		
+			Buscar P: <h:inputText id="txtbuscar" value="#{facturaControllerBEAN.filtro}" />
+			<h:commandButton
+				action="#{facturaControllerBEAN.busquedaProductos()}" value="Buscar">
+				<f:ajax render="resultbusquedaform" execute="buscarform"></f:ajax>
+			</h:commandButton>
+		</h:form>
+	</h:panelGroup>
+
+	<h:panelGroup id="resultbusquedaform">
+		<h:form>
+			<h:dataTable id="tablabusqueda" value="#{facturaControllerBEAN.listPro}" var="item">
+<!--  			<h:dataTable id="tablabusqueda" value="#{facturaControllerBEAN.newfactura.listaDetalle}" var="item"> -->
+				<h:column>
+					<f:facet name="header">ID</f:facet>
+				 	<label > #{item.id} </label>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Descripcion</f:facet>
+					 <label > #{item.descripcion} </label>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Pre.unitario</f:facet>
+					 <label> #{item.precioUnitario} </label>
+				</h:column>
+				<h:column>
+					<h:commandButton action="#{facturaControllerBEAN.addDetalle(item)}"	value="AgregarDetalle" id="iddetalles">
+	 					<f:ajax render="detalleform" execute="resultbusquedaform" />
+					</h:commandButton>
+				</h:column>
+			</h:dataTable>
+		</h:form>
+	</h:panelGroup>
+	
+	<h:panelGrid id="detalleform">
+		<h:form>
+			<h:dataTable id="tblDetalles" value="#{facturaControllerBEAN.newfactura.listaDetalle}" var="detalle">
+				<h:column>
+					<f:facet name="header">Cant</f:facet>
+<!-- 					<h:inputText value="#{facturaControllerBEAN.cantidad}" /> -->
+					<label>#{facturaControllerBEAN.cantidad}</label>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Id.Prodc</f:facet>
+					<label>#{detalle.productos.id}</label>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Descripcion</f:facet>
+					<label>#{detalle.productos.descripcion}</label>
+				</h:column>
+				<h:column>
+					<f:facet name="header">P.Unit</f:facet>
+					<label>#{detalle.productos.precioUnitario}</label>
+				</h:column>
+<!-- 				<h:column> -->
+<!-- 					<f:facet name="header">SubTotal</f:facet> -->
+<!-- 					<h:inputText value="#{facturaControllerBEAN.subtotal}" /> -->
+<!-- 				</h:column> -->
+	<!-- 			<h:column> -->
+	<!-- 				<f:facet name="header">P.Total</f:facet> -->
+	<!-- 				<label>#{facturaControllerBEAN.calculaTotal(detalle.productos.precioUnitario)}</label> -->
+	<!-- 			</h:column> -->
+			</h:dataTable>
+
+			<h:commandButton action="#{facturaControllerBEAN.guardarFactura()}" value="GUARDAR">
+			 	<f:ajax render="@all" execute="detalleform"/>
+			</h:commandButton>
+		</h:form>
+		<br />
+		ValTot: <label > #{facturaControllerBEAN.sumatotal} </label>
+				<br />
+	</h:panelGrid>
+		
+
+
+</h:body>
+</html>
